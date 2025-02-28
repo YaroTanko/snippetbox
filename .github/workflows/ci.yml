@@ -13,32 +13,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.24'
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
 
-      - name: Restore cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            /home/runner/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
+    - name: Install Task
+      uses: arduino/setup-task@v1
+      with:
+        version: '3.x'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: go mod tidy
+    - name: Install dependencies
+      run: go mod tidy
 
-      - name: Build
-        run: task build
+    - name: Build
+      run: task build
 
-      - name: Run tests
-        run: task test
+    - name: Run tests
+      run: task test
 
-      - name: Clean build artifacts
-        run: task clean
+    - name: Clean build artifacts
+      run: task clean
